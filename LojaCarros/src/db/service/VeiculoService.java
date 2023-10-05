@@ -27,19 +27,19 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
         String[] resposta = decompess.split(";");
         LocalDate localDate = LocalDate.parse(resposta[4]);
         Veiculo novo = new Veiculo(resposta[0], resposta[1], resposta[2], resposta[3], localDate, new Condutor(resposta[5], resposta[6]));
-        this.tabela.put(novo, Integer.parseInt(novo.getRenavam()));
+        this.tabela.Adicionar(novo, Integer.parseInt(novo.getRenavam()));
     }
 
     @Override
     public String remover(String renavam) throws RemoteException {
         String res = huffTree.Decompress(renavam);
-        this.tabela.remover(Integer.parseInt(res));
+        this.tabela.Remover(Integer.parseInt(res));
         return huffTree.Compress("Removido veículo [ " + res + " ]");
     }
 
     @Override
     public String listar() throws RemoteException {
-        return huffTree.Compress(this.tabela.print());
+        return huffTree.Compress(this.tabela.Print());
     }
 
     @Override
@@ -48,9 +48,9 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
         String[] resposta = decompess.split(";");
         LocalDate localDate = LocalDate.parse(resposta[4]);
         Veiculo novoVeiculo = new Veiculo(resposta[0], resposta[1], resposta[2], resposta[3], localDate, new Condutor(resposta[5], resposta[6]));
-        Veiculo velhoVeiculo = this.tabela.buscarMF(Integer.parseInt(huffTree.Decompress(renavam))).getValor();
+        Veiculo velhoVeiculo = this.tabela.BuscarMF(Integer.parseInt(huffTree.Decompress(renavam))).getValor();
         if(attCampos(novoVeiculo, velhoVeiculo)){
-            this.tabela.ATT(velhoVeiculo, Integer.parseInt(velhoVeiculo.getRenavam()));
+            this.tabela.Atualizar(velhoVeiculo, Integer.parseInt(velhoVeiculo.getRenavam()));
         }
     }
 
@@ -61,23 +61,23 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
     @Override
     public String fatorDeCarga() throws RemoteException {
-        return huffTree.Compress(String.valueOf( this.tabela.fatorDeCarga() ));
+        return huffTree.Compress(String.valueOf( this.tabela.FatorDeCarga() ));
     }
 
     @Override
     public String buscarMF(String renavam) throws RemoteException {
-        return huffTree.Compress(this.tabela.buscarMF(Integer.parseInt(huffTree.Decompress(renavam))).toString());
+        return huffTree.Compress(this.tabela.BuscarMF(Integer.parseInt(huffTree.Decompress(renavam))).toString());
     }
 
     @Override
     public String buscarTR(String renavam) throws RemoteException {
-        return huffTree.Compress(this.tabela.buscarTR(Integer.parseInt(huffTree.Decompress(renavam))).toString());
+        return huffTree.Compress(this.tabela.BuscarTR(Integer.parseInt(huffTree.Decompress(renavam))).toString());
 
     }
 
     @Override
     public String buscarCF(String renavam) throws RemoteException {
-        return huffTree.Compress(this.tabela.buscarCF(Integer.parseInt(huffTree.Decompress(renavam))).toString());
+        return huffTree.Compress(this.tabela.BuscarCF(Integer.parseInt(huffTree.Decompress(renavam))).toString());
     }
 
     private Boolean attCampos(Veiculo novo, Veiculo velho){

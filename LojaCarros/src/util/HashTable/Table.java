@@ -2,6 +2,8 @@ package util.HashTable;
 
 import java.text.DecimalFormat;
 
+import db.handlers.VeiculoNaoEncontrado;
+
 public class Table<V, K> {
     
     private Node<V, K>[] tabela;
@@ -19,7 +21,7 @@ public class Table<V, K> {
         this.decimalFormat = new DecimalFormat("0.00");
     }
 
-    private Integer hash(Integer chave){
+    private Integer Hash(Integer chave){
         return chave % this.M;
     }
 
@@ -40,9 +42,9 @@ public class Table<V, K> {
         else return false;
     }
 
-    public void put(V valor, K chave){
+    public void Adicionar(V valor, K chave){
 
-        Integer posicao = hash((Integer) chave);
+        Integer posicao = Hash((Integer) chave);
 
         if(this.tabela[posicao] == null){
             this.tabela[posicao] = new Node<>(valor, chave);
@@ -68,7 +70,7 @@ public class Table<V, K> {
 
         this.size++;
 
-        Double fator = fatorDeCarga();
+        Double fator = FatorDeCarga();
 
         System.out.println("Fator de carga = " + this.decimalFormat.format(fator));
 
@@ -89,7 +91,7 @@ public class Table<V, K> {
 
             if(this.tabela[i] != null){
 
-                Integer posicao = hash((Integer) this.tabela[i].getChave());
+                Integer posicao = Hash((Integer) this.tabela[i].getChave());
     
                 nova_tabela[posicao] = this.tabela[i];
 
@@ -101,8 +103,8 @@ public class Table<V, K> {
 
     }
 
-    public Node<V, K> buscarCF(K chave){
-        Integer posicao = hash((Integer)chave);
+    public Node<V, K> BuscarCF(K chave){
+        Integer posicao = Hash((Integer)chave);
         Node<V, K> noHash = this.tabela[posicao];
         System.out.println("Buscando");
         while (noHash != null) {
@@ -116,11 +118,11 @@ public class Table<V, K> {
             return noHash;
         }
 
-        return null;
+        throw new VeiculoNaoEncontrado("Veículo não encontrado !");
     }
 
-    public Node<V, K> buscarMF(K chave){
-        Integer posicao = hash((Integer)chave);
+    public Node<V, K> BuscarMF(K chave){
+        Integer posicao = Hash((Integer)chave);
         Node<V, K> noHash = this.tabela[posicao];
         System.out.println("Buscando");
         while (noHash != null) {
@@ -133,11 +135,11 @@ public class Table<V, K> {
             return noHash;
         }
         
-        return null;
+        throw new VeiculoNaoEncontrado("Veículo não encontrado !");
     }
 
-    public Node<V, K> buscarTR(K chave){
-        Integer posicao = hash((Integer)chave);
+    public Node<V, K> BuscarTR(K chave){
+        Integer posicao = Hash((Integer)chave);
         Node<V, K> noHash = this.tabela[posicao];
         System.out.println("Buscando");
         while (noHash != null) {
@@ -150,7 +152,7 @@ public class Table<V, K> {
             return noHash;
         }
 
-        return null;
+        throw new VeiculoNaoEncontrado("Veículo não encontrado !");
     }
 
     private void MF(Node<V, K> no, Integer posicao){
@@ -207,8 +209,9 @@ public class Table<V, K> {
         else return false;
     }
 
-    public void ATT(V valor, K chave){
-        Integer posicao = hash((Integer) chave);
+    public void Atualizar(V valor, K chave){
+
+        Integer posicao = Hash((Integer) chave);
 
         Node<V, K> noHash = this.tabela[posicao];
 
@@ -218,12 +221,13 @@ public class Table<V, K> {
         }
 
         if(noHash != null){
+            System.out.println("Atualizando");
             noHash.setValor(valor);
-        }
-        System.out.println("Atualizando");
+        } else throw new VeiculoNaoEncontrado("Veículo não encontrado !");
+
     }
 
-    public Double fatorDeCarga(){
+    public Double FatorDeCarga(){
         int total = 0;
         Node<V, K> index;
         for(int i = 0; i < this.M; i++){
@@ -236,9 +240,9 @@ public class Table<V, K> {
         return (double) total / this.M;
     }
 
-    public void remover(Integer chave){
-        Integer posicao = hash((Integer)chave);
-        if(this.tabela[posicao] == null) return;
+    public void Remover(Integer chave){
+        Integer posicao = Hash((Integer)chave);
+        if(this.tabela[posicao] == null) throw new VeiculoNaoEncontrado("Veículo não encontrado !");
         Node<V, K> noHash = this.tabela[posicao];
         System.out.println("Removendo");
         if(noHash.getChave().equals(chave)){
@@ -247,7 +251,7 @@ public class Table<V, K> {
             noHash.setProx(null);
             noHash = null;
             this.size--;
-            System.out.println("Fator de carga = " + this.decimalFormat.format(fatorDeCarga()));
+            System.out.println("Fator de carga = " + this.decimalFormat.format(FatorDeCarga()));
             return;
         }
         while (noHash != null) {
@@ -255,7 +259,7 @@ public class Table<V, K> {
             noHash = noHash.getProx();
         }
 
-        if(noHash == null) return;
+        if(noHash == null) throw new VeiculoNaoEncontrado("Veículo não encontrado !");
 
         if(ProxNull(noHash)){
             noHash.getAnt().setProx(null);
@@ -270,10 +274,10 @@ public class Table<V, K> {
         noHash = null;
 
         this.size--;
-        System.out.println("Fator de carga = " + this.decimalFormat.format(fatorDeCarga()));
+        System.out.println("Fator de carga = " + this.decimalFormat.format(FatorDeCarga()));
     }
 
-    public String print(){
+    public String Print(){
         System.out.println("Listando");
         String res = "";
         Node<V, K> index;
