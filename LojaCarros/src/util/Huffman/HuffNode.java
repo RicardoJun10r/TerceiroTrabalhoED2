@@ -1,6 +1,8 @@
 package util.Huffman;
 
-public class HuffNode {
+import java.io.Serializable;
+
+public class HuffNode implements Serializable {
     
     private String caractere;
 

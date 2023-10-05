@@ -1,13 +1,14 @@
 package util.Huffman;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-public final class HuffTree {
+public class HuffTree implements Serializable {
 
-    private static HuffTree huffTree;
+    private static volatile HuffTree huffTree;
     
     private Map<Character, Integer> map;
 
@@ -17,17 +18,35 @@ public final class HuffTree {
 
     private String texto;
 
-    public static HuffTree Instanciar(){
-        if(huffTree == null){
-            huffTree = new HuffTree();
+    private HuffTree(){
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
         }
 
-        return huffTree;
-    }
-
-    private HuffTree(){
         this.map = new HashMap<>();
         this.raiz = null;
+    }
+
+    public static HuffTree Instanciar(){
+
+        HuffTree resultado = huffTree;
+
+        if(resultado != null){
+            return resultado;
+        }
+
+        synchronized(HuffTree.class){
+            if(huffTree == null){
+                System.out.println("CRIANDO OBJETO HUFFTREE");
+                huffTree = new HuffTree();
+            }
+        }
+        System.out.println("RETORNANDO OBJETO HUFFTREE");
+
+        return huffTree;
     }
 
     public void Clear(){
@@ -82,6 +101,8 @@ public final class HuffTree {
     public String Compress(String texto){
 
         this.texto = texto;
+        
+        // this.Clear();
 
         BuildTree();
 
@@ -89,10 +110,16 @@ public final class HuffTree {
         for (int i = 0; i < texto.length(); i++) {
             Search(String.valueOf(texto.charAt(i)), stringBuffer);
         }
+
         return stringBuffer.toString();
     }
 
+    private void PrintRaiz(){
+        System.out.println(this.raiz.getCaractere() + " = " + this.raiz.getFrequencia());
+    }
+
     public String Decompress(String code){
+        // PrintRaiz();
         StringBuffer stringBuffer = new StringBuffer();
         Integer contador = 0;
         Decompress(this.raiz, code, contador, stringBuffer);

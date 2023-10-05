@@ -3,6 +3,8 @@ package Server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import util.Huffman.HuffTree;
+
 public interface IServer extends Remote {
 
     void adicionar(String veiculo) throws RemoteException;
@@ -14,5 +16,6 @@ public interface IServer extends Remote {
     void atualizar(String novo, String renavam) throws RemoteException;
     String quantidadeDeCarros() throws RemoteException;
     String fatorDeCarga() throws RemoteException;
+    HuffTree instanciar() throws RemoteException;
     
 }

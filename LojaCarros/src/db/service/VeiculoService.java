@@ -18,13 +18,18 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
     public VeiculoService() throws RemoteException {
         this.tabela = new Table<>();
-        this.huffTree = HuffTree.Instanciar();
+        this.huffTree = null;
     }
 
     @Override
     public void adicionar(String veiculo) throws RemoteException {
-        String decompess = huffTree.Decompress(veiculo);
+        instanciar().PrintTree();
+        System.out.println(veiculo);
+        String decompess = instanciar().Decompress(veiculo);
+        System.out.println("RESPOSTA = " + decompess);
         String[] resposta = decompess.split(";");
+        System.out.println(resposta.length);
+        System.out.println(resposta);
         LocalDate localDate = LocalDate.parse(resposta[4]);
         Veiculo novo = new Veiculo(resposta[0], resposta[1], resposta[2], resposta[3], localDate, new Condutor(resposta[5], resposta[6]));
         this.tabela.Adicionar(novo, Integer.parseInt(novo.getRenavam()));
@@ -111,6 +116,14 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
         return hasAtt;
         
+    }
+
+    @Override
+    public HuffTree instanciar() throws RemoteException {
+        if(huffTree == null){
+            huffTree = HuffTree.Instanciar();
+        }
+        return huffTree;
     }
     
 }

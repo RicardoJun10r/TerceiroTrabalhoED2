@@ -15,8 +15,6 @@ public class Cliente {
     
     private static Scanner scan = new Scanner(System.in);
 
-    private static HuffTree huffTree = HuffTree.Instanciar();
-
     public static void main(String[] args) throws UnknownHostException, IOException, NotBoundException {
         String objName = "rmi://localhost:1099/lojaCarros";
         IServer veiculos = (IServer) Naming.lookup(objName);
@@ -41,7 +39,9 @@ public class Cliente {
 
         String carro = "";
 
-        for(int i = 0; i < 50; i++){
+        // HuffTree huffTree = veiculoService.instanciar();
+
+        for(int i = 0; i < 1; i++){
 
             carro += String.valueOf(i) + "0015468" + ";";
             carro += "Kwid" + i + ";";
@@ -49,9 +49,15 @@ public class Cliente {
             carro += "QRT12" + i + ";";
             carro += LocalDate.now().toString() + ";";
             carro += "Roberto" + i + ";";
-            carro += "041646" + i + ";";
+            carro += "041646" + i;
 
-            veiculoService.adicionar(huffTree.Compress(carro));
+            System.out.println(carro);
+
+            String compress = veiculoService.instanciar().Compress(carro);
+
+            System.out.println(compress);
+
+            veiculoService.adicionar(compress);
 
             carro = "";
         }
@@ -64,6 +70,9 @@ public class Cliente {
 
     static void processOption(int opcao , IServer veiculos) throws RemoteException{
         try {
+
+            HuffTree huffTree = veiculos.instanciar();
+
             switch(opcao){
             case 0:
             {
