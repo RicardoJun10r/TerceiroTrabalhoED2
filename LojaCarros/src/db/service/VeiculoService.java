@@ -49,7 +49,7 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
         huffTree.Clear();
 
-        String compressed = huffTree.Compress(this.tabela.BuscarMF(Integer.parseInt(decompressed)).toString());
+        String compressed = huffTree.Compress(this.tabela.BuscarMF(Integer.parseInt(decompressed)).getValor().toString());
 
         return new ResponseDTO(compressed, huffTree);
     }
@@ -61,7 +61,7 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
         huffTree.Clear();
 
-        String compressed = huffTree.Compress(this.tabela.BuscarTR(Integer.parseInt(decompressed)).toString());
+        String compressed = huffTree.Compress(this.tabela.BuscarTR(Integer.parseInt(decompressed)).getValor().toString());
 
         return new ResponseDTO(compressed, huffTree);
 
@@ -74,7 +74,7 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
         huffTree.Clear();
 
-        String compressed = huffTree.Compress(this.tabela.BuscarCF(Integer.parseInt(decompressed)).toString());
+        String compressed = huffTree.Compress(this.tabela.BuscarCF(Integer.parseInt(decompressed)).getValor().toString());
 
         return new ResponseDTO(compressed, huffTree);
 
