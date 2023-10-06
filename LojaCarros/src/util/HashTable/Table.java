@@ -159,15 +159,15 @@ public class Table<V, K> {
     private void MF(Node<V, K> no, Integer posicao){
         if(this.tabela[posicao].equals(no)) return;
         else{
-            if(ProxNull(no)){
-                no.getAnt().setProx( no.getProx() );
-            } else{
-                no.getAnt().setProx( no.getProx() );
+            
+            if(!ProxNull(no)){
                 no.getProx().setAnt( no.getAnt() );
-            }
+            } 
+            
             no.getAnt().setProx( no.getProx() );
-            no.setAnt( null );
             no.setProx(this.tabela[posicao]);
+            no.setAnt( null );
+            this.tabela[posicao].setAnt(no);
             this.tabela[posicao] = no;
         }
     }
