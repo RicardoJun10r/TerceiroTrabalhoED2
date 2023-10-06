@@ -8,8 +8,6 @@ import java.util.Map.Entry;
 
 public class HuffTree implements Serializable {
 
-    private static volatile HuffTree huffTree;
-    
     private Map<Character, Integer> map;
 
     private HuffNode[] vetor;
@@ -18,35 +16,10 @@ public class HuffTree implements Serializable {
 
     private String texto;
 
-    private HuffTree(){
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+    public HuffTree(){
 
         this.map = new HashMap<>();
         this.raiz = null;
-    }
-
-    public static HuffTree Instanciar(){
-
-        HuffTree resultado = huffTree;
-
-        if(resultado != null){
-            return resultado;
-        }
-
-        synchronized(HuffTree.class){
-            if(huffTree == null){
-                System.out.println("CRIANDO OBJETO HUFFTREE");
-                huffTree = new HuffTree();
-            }
-        }
-        System.out.println("RETORNANDO OBJETO HUFFTREE");
-
-        return huffTree;
     }
 
     public void Clear(){

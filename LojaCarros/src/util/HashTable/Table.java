@@ -3,6 +3,8 @@ package util.HashTable;
 import java.text.DecimalFormat;
 
 import db.handlers.VeiculoNaoEncontrado;
+import util.ResponseDTO;
+import util.Huffman.HuffTree;
 
 public class Table<V, K> {
     
@@ -280,24 +282,28 @@ public class Table<V, K> {
         System.out.println("Fator de carga = " + this.decimalFormat.format(FatorDeCarga()));
     }
 
-    public String Print(){
-        System.out.println("Listando");
-        String res = "";
+    public ResponseDTO Print(Integer posicao){
+        StringBuffer res = new StringBuffer();
         Node<V, K> index;
-        for(int i = 0; i < this.M; i++){
-            index = this.tabela[i];
-            res += i;
-            while (index != null) {
-                res += " -- " + index.getValor();
-                index = index.getProx();
-            }
-            res += "\n";
+
+        index = this.tabela[posicao];
+        res.append(posicao);
+        while (index != null) {
+            res.append(" --> "); 
+            res.append(index.getValor());
+            index = index.getProx();
         }
-        return res;
+        res.append("\n");
+
+        HuffTree huffTree = new HuffTree();
+
+        String compressed = huffTree.Compress(res.toString());
+
+        return new ResponseDTO(compressed, huffTree);
     }
 
     public Integer Tamanho(){
-        return this.size;
+        return this.M;
     }
 
 }

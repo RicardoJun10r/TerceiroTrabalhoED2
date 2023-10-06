@@ -3,19 +3,19 @@ package Server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import util.ResponseDTO;
 import util.Huffman.HuffTree;
 
 public interface IServer extends Remote {
 
-    void adicionar(String veiculo) throws RemoteException;
-    String remover(String renavam) throws RemoteException;
-    String listar() throws RemoteException;
-    String buscarMF(String renavam) throws RemoteException;
-    String buscarTR(String renavam) throws RemoteException;
-    String buscarCF(String renavam) throws RemoteException;
-    void atualizar(String novo, String renavam) throws RemoteException;
-    String quantidadeDeCarros() throws RemoteException;
-    String fatorDeCarga() throws RemoteException;
-    HuffTree instanciar() throws RemoteException;
+    void adicionar(String veiculo, HuffTree huffTree) throws RemoteException;
+    ResponseDTO remover(String renavam, HuffTree huffTree) throws RemoteException;
+    ResponseDTO listar(Integer posicao) throws RemoteException;
+    ResponseDTO buscarMF(String renavam, HuffTree huffTree) throws RemoteException;
+    ResponseDTO buscarTR(String renavam, HuffTree huffTree) throws RemoteException;
+    ResponseDTO buscarCF(String renavam, HuffTree huffTree) throws RemoteException;
+    void atualizar(String novo, String renavam, HuffTree huffTree) throws RemoteException;
+    ResponseDTO quantidadeDeCarros() throws RemoteException;
+    ResponseDTO fatorDeCarga() throws RemoteException;
     
 }

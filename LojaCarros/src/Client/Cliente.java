@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 import Server.IServer;
+import util.ResponseDTO;
 import util.Huffman.HuffTree;
 
 public class Cliente {
@@ -39,9 +40,9 @@ public class Cliente {
 
         String carro = "";
 
-        // HuffTree huffTree = veiculoService.instanciar();
+        for(int i = 0; i < 50; i++){
 
-        for(int i = 0; i < 1; i++){
+            HuffTree huffTree = new HuffTree();
 
             carro += String.valueOf(i) + "0015468" + ";";
             carro += "Kwid" + i + ";";
@@ -51,15 +52,12 @@ public class Cliente {
             carro += "Roberto" + i + ";";
             carro += "041646" + i;
 
-            System.out.println(carro);
+            String compress = huffTree.Compress(carro);
 
-            String compress = veiculoService.instanciar().Compress(carro);
-
-            System.out.println(compress);
-
-            veiculoService.adicionar(compress);
+            veiculoService.adicionar(compress, huffTree);
 
             carro = "";
+
         }
 
     }
@@ -68,11 +66,8 @@ public class Cliente {
         System.out.print("\n[0] - sair\n[1] - adicionar\n[2] - remover\n[3] - listar\n[4] - buscar ( usando MOVER PARA FRENTE)\n[5] - buscar ( usando TRANSPOSIÇÃO)\n[6] - buscar ( usando CONTADOR DE FREQUẼNCIA)\n[7] - atualizar\n[8] - quantidade de carros\n[9] - fator de carga\nOpção: [_]\b\b");
     }
 
-    static void processOption(int opcao , IServer veiculos) throws RemoteException{
+    static void processOption(int opcao, IServer veiculos) throws RemoteException{
         try {
-
-            HuffTree huffTree = veiculos.instanciar();
-
             switch(opcao){
             case 0:
             {
@@ -103,7 +98,9 @@ public class Cliente {
 
                 String carro = renavam + ";" + nome + ";" + modelo + ";" + placa + ";" + dataString + ";" + condutor + ";" + cpf;
 
-                veiculos.adicionar(huffTree.Compress(carro));
+                HuffTree huffTree = new HuffTree();
+
+                veiculos.adicionar(huffTree.Compress(carro), huffTree);
                 break;
             }
             case 2:
@@ -111,15 +108,30 @@ public class Cliente {
                 String renavam;
                 System.out.println("Renavam:");
                 renavam = scan.next();
-                String res = huffTree.Decompress(veiculos.remover( huffTree.Compress(renavam) ));
+                HuffTree huffTree = new HuffTree();
+                ResponseDTO responseDTO = veiculos.remover( huffTree.Compress(renavam), huffTree );
+                huffTree = responseDTO.getHuffTree();
+                String res = huffTree.Decompress(responseDTO.getResposta());
                 System.out.println( res );
                 break;
             }
             case 3:
             {
                 System.out.println("\nListando");
-                String res = huffTree.Decompress(veiculos.listar());
-                System.out.println( res );
+                ResponseDTO responseDTO = veiculos.quantidadeDeCarros();
+                HuffTree huffTree = responseDTO.getHuffTree();
+                Integer tamanho = Integer.parseInt(huffTree.Decompress(responseDTO.getResposta()));
+                int contador = 0;
+                StringBuffer stringBuffer = new StringBuffer();
+                while (contador < tamanho) {
+                    ResponseDTO response = veiculos.listar(contador);
+                    huffTree = response.getHuffTree();
+                    String res = huffTree.Decompress(response.getResposta());
+                    stringBuffer.append(res);
+                    stringBuffer.append("\n");
+                    contador++;
+                }
+                System.out.println( stringBuffer.toString() );
                 break;
             }
             case 4:
@@ -127,7 +139,10 @@ public class Cliente {
                 String renavam;
                 System.out.println("Renavam:");
                 renavam = scan.next();
-                String veiculo = huffTree.Decompress( veiculos.buscarMF( huffTree.Compress(renavam)) );
+                HuffTree huffTree = new HuffTree();
+                ResponseDTO responseDTO = veiculos.buscarMF( huffTree.Compress(renavam), huffTree);
+                huffTree = responseDTO.getHuffTree();
+                String veiculo = huffTree.Decompress( responseDTO.getResposta() );
                 System.out.println(veiculo);
                 break;
             }
@@ -136,7 +151,10 @@ public class Cliente {
                 String renavam;
                 System.out.println("Renavam:");
                 renavam = scan.next();
-                String veiculo = huffTree.Decompress( veiculos.buscarTR( huffTree.Compress(renavam)) );
+                HuffTree huffTree = new HuffTree();
+                ResponseDTO responseDTO = veiculos.buscarTR( huffTree.Compress(renavam), huffTree);
+                huffTree = responseDTO.getHuffTree();
+                String veiculo = huffTree.Decompress( responseDTO.getResposta() );
                 System.out.println(veiculo);
                 break;
             }
@@ -145,7 +163,10 @@ public class Cliente {
                 String renavam;
                 System.out.println("Renavam:");
                 renavam = scan.next();
-                String veiculo = huffTree.Decompress( veiculos.buscarCF( huffTree.Compress(renavam)) );
+                HuffTree huffTree = new HuffTree();
+                ResponseDTO responseDTO = veiculos.buscarCF( huffTree.Compress(renavam), huffTree);
+                huffTree = responseDTO.getHuffTree();
+                String veiculo = huffTree.Decompress( responseDTO.getResposta() );
                 System.out.println(veiculo);
                 break;
             }
@@ -170,20 +191,27 @@ public class Cliente {
                 System.out.println("CPF do condutor ou '*' (vazio):");
                 cpf = scan.next();
 
+                HuffTree huffTree = new HuffTree();
+
                 String carro = renavam + ";" + nome + ";" + modelo + ";" + placa + ";" + dataString + ";" + condutor + ";" + cpf;
 
-                veiculos.atualizar(huffTree.Compress(carro), huffTree.Compress(renavam));
+                veiculos.atualizar(huffTree.Compress(carro), huffTree.Compress(renavam), huffTree);
+
                 break;
             }
             case 8:
             {
-                String res = huffTree.Decompress(veiculos.quantidadeDeCarros());
+                ResponseDTO responseDTO = veiculos.quantidadeDeCarros();
+                HuffTree huffTree = responseDTO.getHuffTree();
+                String res = huffTree.Decompress(responseDTO.getResposta());
                 System.out.println("Existem: " + res + " carros cadastrados");
                 break;
             }
             case 9:
             {
-                String res = huffTree.Decompress(veiculos.fatorDeCarga());
+                ResponseDTO responseDTO = veiculos.fatorDeCarga();
+                HuffTree huffTree = responseDTO.getHuffTree();
+                String res = huffTree.Decompress(responseDTO.getResposta());
                 System.out.println("Fator de carga: " + res + "%");
                 break;
             }
