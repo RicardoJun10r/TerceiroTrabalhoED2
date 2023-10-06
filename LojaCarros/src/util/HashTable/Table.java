@@ -189,7 +189,7 @@ public class Table<V, K> {
     private void CF(Node<V, K> no, Integer posicao){
         if(this.tabela[posicao].equals(no)) return;
         else{
-            if(no.getFrequencia() > no.getAnt().getFrequencia()){
+            while(no.getFrequencia() > no.getAnt().getFrequencia()){
                 V temp = no.getAnt().getValor();
                 Integer freq = no.getAnt().getFrequencia();
                 K chave = no.getAnt().getChave();
@@ -199,6 +199,7 @@ public class Table<V, K> {
                 no.setChave( chave );
                 no.setValor( temp );
                 no.setFrequencia( freq );
+                if(no.getAnt() != null) no = no.getAnt();
             }
             return;
         }
