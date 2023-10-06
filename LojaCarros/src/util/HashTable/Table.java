@@ -85,21 +85,20 @@ public class Table<V, K> {
     private void Redimensionar(){
         
         this.M = ProximoPrimo(this.M*2);
-        Node<V, K>[] nova_tabela = new Node[this.M];
+        
+        Node<V, K>[] velha_tabela = this.tabela;
 
-        for (int i = 0; i < this.tabela.length; i++) {
+        this.tabela = new Node[this.M];
 
-            if(this.tabela[i] != null){
+        for (int i = 0; i < velha_tabela.length; i++) {
 
-                Integer posicao = Hash((Integer) this.tabela[i].getChave());
-    
-                nova_tabela[posicao] = this.tabela[i];
+            if(velha_tabela[i] != null){
+
+                Adicionar(velha_tabela[i].getValor(), velha_tabela[i].getChave());
 
             }
             
         }
-
-        this.tabela = nova_tabela;
 
     }
 
@@ -200,6 +199,7 @@ public class Table<V, K> {
                 no.setValor( temp );
                 no.setFrequencia( freq );
                 if(no.getAnt() != null) no = no.getAnt();
+                if(this.tabela[posicao].equals(no)) return;
             }
             return;
         }
@@ -207,6 +207,11 @@ public class Table<V, K> {
 
     private Boolean ProxNull(Node<V, K> no){
         if(no.getProx() == null) return true;
+        else return false;
+    }
+
+    private Boolean AntNull(Node<V, K> no){
+        if(no.getAnt() == null) return true;
         else return false;
     }
 
@@ -241,21 +246,14 @@ public class Table<V, K> {
         return (double) total / this.M;
     }
 
-    // REFATORAR
     public void Remover(Integer chave){
         Integer posicao = Hash((Integer)chave);
+        
         if(this.tabela[posicao] == null) throw new VeiculoNaoEncontrado("Veículo não encontrado !");
+        
         Node<V, K> noHash = this.tabela[posicao];
         System.out.println("Removendo");
-        if(noHash.getChave().equals(chave)){
-            this.tabela[posicao] = noHash.getProx();
-            this.tabela[posicao].setAnt(null);
-            noHash.setProx(null);
-            noHash = null;
-            this.size--;
-            System.out.println("Fator de carga = " + this.decimalFormat.format(FatorDeCarga()));
-            return;
-        }
+
         while(noHash != null) {
             if(noHash.getChave().equals(chave)) break;
             noHash = noHash.getProx();
@@ -263,7 +261,10 @@ public class Table<V, K> {
 
         if(noHash == null) throw new VeiculoNaoEncontrado("Veículo não encontrado !");
 
-        if(ProxNull(noHash)){
+        if(AntNull(noHash)){
+            this.tabela[posicao] = noHash.getProx();
+        }
+        else if(ProxNull(noHash)){
             noHash.getAnt().setProx(null);
         } else {
             noHash.getProx().setAnt(noHash.getAnt());
