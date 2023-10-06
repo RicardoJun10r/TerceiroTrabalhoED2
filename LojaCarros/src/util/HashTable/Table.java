@@ -241,6 +241,7 @@ public class Table<V, K> {
         return (double) total / this.M;
     }
 
+    // REFATORAR
     public void Remover(Integer chave){
         Integer posicao = Hash((Integer)chave);
         if(this.tabela[posicao] == null) throw new VeiculoNaoEncontrado("Veículo não encontrado !");
@@ -255,7 +256,7 @@ public class Table<V, K> {
             System.out.println("Fator de carga = " + this.decimalFormat.format(FatorDeCarga()));
             return;
         }
-        while (noHash != null) {
+        while(noHash != null) {
             if(noHash.getChave().equals(chave)) break;
             noHash = noHash.getProx();
         }
