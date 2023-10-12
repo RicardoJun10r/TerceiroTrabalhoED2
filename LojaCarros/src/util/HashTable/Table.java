@@ -16,10 +16,13 @@ public class Table<V, K> {
 
     private DecimalFormat decimalFormat;
 
+    private Boolean isResize;
+
     public Table(){
         this.M = 97;
         this.tabela = new Node[this.M];
         this.size = 0;
+        this.isResize = true;
         this.decimalFormat = new DecimalFormat("0.00");
     }
 
@@ -72,21 +75,28 @@ public class Table<V, K> {
 
         this.size++;
 
-        Double fator = FatorDeCarga();
+        if(this.isResize){
 
-        System.out.println();
+            Double fator = FatorDeCarga();
+    
+            System.out.println();
+    
+            System.out.println("Fator de carga = " + this.decimalFormat.format(fator));
+    
+            System.out.println();
+    
+            System.out.println("Posição = " + posicao + " Valor = " + valor.toString());
+    
+            System.out.println();
+    
+            if(fator >= 0.7d){
+                Redimensionar();
+            }
 
-        System.out.println("Fator de carga = " + this.decimalFormat.format(fator));
-
-        System.out.println();
-
-        System.out.println("Posição = " + posicao + " Valor = " + valor.toString());
-
-        System.out.println();
-
-        if(fator >= 0.7d){
-            Redimensionar();
+        } else {
+            this.isResize = true;
         }
+
 
     }
 
@@ -98,42 +108,16 @@ public class Table<V, K> {
 
         this.tabela = new Node[this.M];
 
+        this.isResize = false;
+
         for (int i = 0; i < velha_tabela.length; i++) {
 
             if(velha_tabela[i] != null){
 
-                Redimensionar_ADD(velha_tabela[i].getValor(), velha_tabela[i].getChave());
+                Adicionar(velha_tabela[i].getValor(), velha_tabela[i].getChave());
 
             }
             
-        }
-
-    }
-
-    private void Redimensionar_ADD(V valor, K chave){
-
-        Integer posicao = Hash((Integer) chave);
-
-        if(this.tabela[posicao] == null){
-            this.tabela[posicao] = new Node<>(valor, chave);
-        } else {
-
-            Node<V, K> noHash = this.tabela[posicao];
-    
-            Node<V, K> no_ant = noHash;
-    
-            while(noHash != null){
-                if(noHash.getValor().equals(valor)) break;
-                no_ant = noHash;
-                noHash = noHash.getProx();
-            }
-    
-            if(noHash == null){
-                noHash = new Node<>(valor, chave);
-                no_ant.setProx(noHash);
-                noHash.setAnt(no_ant);
-            } else return;
-
         }
 
     }
