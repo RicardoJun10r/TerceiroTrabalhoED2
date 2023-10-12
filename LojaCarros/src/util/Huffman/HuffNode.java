@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class HuffNode implements Serializable {
     
-    private String caractere;
+    private Character caractere;
 
     private Integer frequencia;
 
@@ -12,18 +12,18 @@ public class HuffNode implements Serializable {
 
     private HuffNode dir;
 
-    public HuffNode(String caractere, Integer frequencia){
+    public HuffNode(Character caractere, Integer frequencia){
         this.caractere = caractere;
         this.frequencia = frequencia;
         this.dir = null;
         this.esq = null;
     }
 
-    public String getCaractere() {
+    public Character getCaractere() {
         return caractere;
     }
 
-    public void setCaractere(String caractere) {
+    public void setCaractere(Character caractere) {
         this.caractere = caractere;
     }
 

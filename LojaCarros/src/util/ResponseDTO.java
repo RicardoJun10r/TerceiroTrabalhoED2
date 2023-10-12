@@ -6,20 +6,20 @@ import util.Huffman.HuffTree;
 
 public class ResponseDTO implements Serializable {
     
-    private String resposta;
+    private Character[] resposta;
     
     private HuffTree huffTree;
 
-    public ResponseDTO(String resposta, HuffTree huffTree) {
+    public ResponseDTO(Character[] resposta, HuffTree huffTree) {
         this.resposta = resposta;
         this.huffTree = huffTree;
     }
 
-    public String getResposta() {
+    public Character[] getResposta() {
         return resposta;
     }
 
-    public void setResposta(String resposta) {
+    public void setResposta(Character[] resposta) {
         this.resposta = resposta;
     }
 

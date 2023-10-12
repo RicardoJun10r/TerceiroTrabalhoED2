@@ -20,19 +20,19 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
     }
 
     @Override
-    public void adicionar(String veiculo, HuffTree huffTree) throws RemoteException {
+    public void adicionar(Character[] veiculo, HuffTree huffTree) throws RemoteException {
         String decompess = huffTree.Decompress(veiculo);
+        System.out.println(decompess);
         String[] resposta = decompess.split(";");
-        LocalDate localDate = LocalDate.parse(resposta[4]);
-        Veiculo novo = new Veiculo(resposta[0], resposta[1], resposta[2], resposta[3], localDate, new Condutor(resposta[5], resposta[6]));
+        Veiculo novo = new Veiculo(resposta[0], resposta[1], resposta[2], resposta[3], LocalDate.parse(resposta[4]), new Condutor(resposta[5], resposta[6]));
         this.tabela.Adicionar(novo, Integer.parseInt(novo.getRenavam()));
     }
 
     @Override
-    public ResponseDTO remover(String renavam, HuffTree huffTree) throws RemoteException {
+    public ResponseDTO remover(Character[] renavam, HuffTree huffTree) throws RemoteException {
         String res = huffTree.Decompress(renavam);
         this.tabela.Remover(Integer.parseInt(res));
-        String compressed = huffTree.Compress("Removido veículo [ " + res + " ]");
+        Character[] compressed = huffTree.Compress("Removido veículo [ " + res + " ]");
         return new ResponseDTO(compressed, huffTree);
     }
 
@@ -43,45 +43,45 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
     }
 
     @Override
-    public ResponseDTO buscarMF(String renavam, HuffTree huffTree) throws RemoteException {
+    public ResponseDTO buscarMF(Character[] renavam, HuffTree huffTree) throws RemoteException {
 
         String decompressed = huffTree.Decompress(renavam);
 
         huffTree.Clear();
 
-        String compressed = huffTree.Compress(this.tabela.BuscarMF(Integer.parseInt(decompressed)).getValor().toString());
+        Character[] compressed = huffTree.Compress(this.tabela.BuscarMF(Integer.parseInt(decompressed)).getValor().toString());
 
         return new ResponseDTO(compressed, huffTree);
     }
 
     @Override
-    public ResponseDTO buscarTR(String renavam, HuffTree huffTree) throws RemoteException {
+    public ResponseDTO buscarTR(Character[] renavam, HuffTree huffTree) throws RemoteException {
 
         String decompressed = huffTree.Decompress(renavam);
 
         huffTree.Clear();
 
-        String compressed = huffTree.Compress(this.tabela.BuscarTR(Integer.parseInt(decompressed)).getValor().toString());
-
-        return new ResponseDTO(compressed, huffTree);
-
-    }
-
-    @Override
-    public ResponseDTO buscarCF(String renavam, HuffTree huffTree) throws RemoteException {
-
-        String decompressed = huffTree.Decompress(renavam);
-
-        huffTree.Clear();
-
-        String compressed = huffTree.Compress(this.tabela.BuscarCF(Integer.parseInt(decompressed)).getValor().toString());
+        Character[] compressed = huffTree.Compress(this.tabela.BuscarTR(Integer.parseInt(decompressed)).getValor().toString());
 
         return new ResponseDTO(compressed, huffTree);
 
     }
 
     @Override
-    public void atualizar(String novo, String renavam, HuffTree huffTree) throws RemoteException {
+    public ResponseDTO buscarCF(Character[] renavam, HuffTree huffTree) throws RemoteException {
+
+        String decompressed = huffTree.Decompress(renavam);
+
+        huffTree.Clear();
+
+        Character[] compressed = huffTree.Compress(this.tabela.BuscarCF(Integer.parseInt(decompressed)).getValor().toString());
+
+        return new ResponseDTO(compressed, huffTree);
+
+    }
+
+    @Override
+    public void atualizar(Character[] novo, Character[] renavam, HuffTree huffTree) throws RemoteException {
         String decompess = huffTree.Decompress(novo);
         String[] resposta = decompess.split(";");
         LocalDate localDate = LocalDate.parse(resposta[4]);
@@ -95,14 +95,14 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
     @Override
     public ResponseDTO quantidadeDeCarros() throws RemoteException {
         HuffTree huffTree = new HuffTree();
-        String compressed = huffTree.Compress(String.valueOf( this.tabela.Tamanho() ));
+        Character[] compressed = huffTree.Compress(String.valueOf( this.tabela.Tamanho() ));
         return new ResponseDTO(compressed, huffTree);
     }
 
     @Override
     public ResponseDTO fatorDeCarga() throws RemoteException {
         HuffTree huffTree = new HuffTree();
-        String compressed = huffTree.Compress(String.valueOf( this.tabela.FatorDeCarga() ));
+        Character[] compressed = huffTree.Compress(String.valueOf( this.tabela.FatorDeCarga() ));
         return new ResponseDTO(compressed, huffTree);
     }
 
@@ -137,6 +137,17 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
         return hasAtt;
         
+    }
+
+    public Character[] StringToCharacter(String text){
+
+        Character[] characters = new Character[text.length()];
+
+        for (int i = 0; i < text.length(); i++) {
+            characters[i] = text.charAt(i);
+        }
+        return characters;
+
     }
     
 }

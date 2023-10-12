@@ -44,17 +44,17 @@ public class Cliente {
 
             HuffTree huffTree = new HuffTree();
 
-            carro += String.valueOf(i) + "0015468" + ";";
-            carro += "Kwid" + i + ";";
-            carro += "Renault" + i + ";";
-            carro += "QRT12" + i + ";";
+            carro += String.valueOf(i) + "1515468" + ";";
+            carro += "Kwid" + String.valueOf(i) + ";";
+            carro += "Renault" + String.valueOf(i) + ";";
+            carro += "QRT12" + String.valueOf(i) + ";";
             carro += LocalDate.now().toString() + ";";
-            carro += "Roberto" + i + ";";
-            carro += "041646" + i;
+            carro += "Roberto" + String.valueOf(i) + ";";
+            carro += "041646" + String.valueOf(i);
 
-            String compress = huffTree.Compress(carro);
+            Character[] compressed = huffTree.Compress(carro);
 
-            veiculoService.adicionar(compress, huffTree);
+            veiculoService.adicionar(compressed, huffTree);
 
             carro = "";
 

@@ -74,9 +74,15 @@ public class Table<V, K> {
 
         Double fator = FatorDeCarga();
 
+        System.out.println();
+
         System.out.println("Fator de carga = " + this.decimalFormat.format(fator));
 
-        System.out.println("Adicionando " + valor.toString());
+        System.out.println();
+
+        System.out.println("Posição = " + posicao + " Valor = " + valor.toString());
+
+        System.out.println();
 
         if(fator >= 0.7d){
             Redimensionar();
@@ -297,7 +303,27 @@ public class Table<V, K> {
 
         HuffTree huffTree = new HuffTree();
 
-        String compressed = huffTree.Compress(res.toString());
+        Character[] compressed = huffTree.Compress(res.toString());
+
+        return new ResponseDTO(compressed, huffTree);
+    }
+
+    public ResponseDTO print(){
+        System.out.println("Listando");
+        String res = "";
+        Node<V, K> index;
+        for(int i = 0; i < this.M; i++){
+            index = this.tabela[i];
+            res += i;
+            while (index != null) {
+                res += " -- " + index.getValor();
+                index = index.getProx();
+            }
+            res += "\n";
+        }
+        HuffTree huffTree = new HuffTree();
+
+        Character[] compressed = huffTree.Compress(res.toString());
 
         return new ResponseDTO(compressed, huffTree);
     }
