@@ -17,7 +17,7 @@ public class Table<V, K> {
     private DecimalFormat decimalFormat;
 
     public Table(){
-        this.M = 5;
+        this.M = 97;
         this.tabela = new Node[this.M];
         this.size = 0;
         this.decimalFormat = new DecimalFormat("0.00");
@@ -102,10 +102,38 @@ public class Table<V, K> {
 
             if(velha_tabela[i] != null){
 
-                Adicionar(velha_tabela[i].getValor(), velha_tabela[i].getChave());
+                Redimensionar_ADD(velha_tabela[i].getValor(), velha_tabela[i].getChave());
 
             }
             
+        }
+
+    }
+
+    private void Redimensionar_ADD(V valor, K chave){
+
+        Integer posicao = Hash((Integer) chave);
+
+        if(this.tabela[posicao] == null){
+            this.tabela[posicao] = new Node<>(valor, chave);
+        } else {
+
+            Node<V, K> noHash = this.tabela[posicao];
+    
+            Node<V, K> no_ant = noHash;
+    
+            while(noHash != null){
+                if(noHash.getValor().equals(valor)) break;
+                no_ant = noHash;
+                noHash = noHash.getProx();
+            }
+    
+            if(noHash == null){
+                noHash = new Node<>(valor, chave);
+                no_ant.setProx(noHash);
+                noHash.setAnt(no_ant);
+            } else return;
+
         }
 
     }
@@ -330,6 +358,10 @@ public class Table<V, K> {
 
     public Integer Tamanho(){
         return this.M;
+    }
+
+    public Integer Quantidade(){
+        return this.size;
     }
 
 }

@@ -95,7 +95,7 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
     @Override
     public ResponseDTO quantidadeDeCarros() throws RemoteException {
         HuffTree huffTree = new HuffTree();
-        Character[] compressed = huffTree.Compress(String.valueOf( this.tabela.Tamanho() ));
+        Character[] compressed = huffTree.Compress(String.valueOf( this.tabela.Quantidade() ));
         return new ResponseDTO(compressed, huffTree);
     }
 
@@ -148,6 +148,13 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
         }
         return characters;
 
+    }
+
+    @Override
+    public ResponseDTO tamanhoTabela() throws RemoteException {
+        HuffTree huffTree = new HuffTree();
+        Character[] compressed = huffTree.Compress(String.valueOf( this.tabela.Tamanho() ));
+        return new ResponseDTO(compressed, huffTree);
     }
     
 }

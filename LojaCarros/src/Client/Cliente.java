@@ -118,7 +118,7 @@ public class Cliente {
             case 3:
             {
                 System.out.println("\nListando");
-                ResponseDTO responseDTO = veiculos.quantidadeDeCarros();
+                ResponseDTO responseDTO = veiculos.tamanhoTabela();
                 HuffTree huffTree = responseDTO.getHuffTree();
                 Integer tamanho = Integer.parseInt(huffTree.Decompress(responseDTO.getResposta()));
                 int contador = 0;
