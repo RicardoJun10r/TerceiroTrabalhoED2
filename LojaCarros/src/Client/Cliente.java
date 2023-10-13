@@ -63,7 +63,7 @@ public class Cliente {
     }
 
     static void menu(){
-        System.out.print("\n[0] - sair\n[1] - adicionar\n[2] - remover\n[3] - listar\n[4] - buscar ( usando MOVER PARA FRENTE)\n[5] - buscar ( usando TRANSPOSIÇÃO)\n[6] - buscar ( usando CONTADOR DE FREQUẼNCIA)\n[7] - atualizar\n[8] - quantidade de carros\n[9] - fator de carga\nOpção: [_]\b\b");
+        System.out.print("\n[0] - sair\n[1] - adicionar\n[2] - remover\n[3] - listar\n[4] - buscar ( usando MOVER PARA FRENTE )\n[5] - buscar ( usando TRANSPOSIÇÃO )\n[6] - buscar ( usando CONTADOR DE FREQUẼNCIA )\n[7] - atualizar\n[8] - quantidade de carros\n[9] - fator de carga\nOpção: [_]\b\b");
     }
 
     static void processOption(int opcao, IServer veiculos) throws RemoteException{
@@ -191,11 +191,19 @@ public class Cliente {
                 System.out.println("CPF do condutor ou '*' (vazio):");
                 cpf = scan.next();
 
-                HuffTree huffTree = new HuffTree();
+                HuffTree[] huffTree = new HuffTree[2];
+
+                huffTree[0] = new HuffTree();
+
+                huffTree[1] = new HuffTree();
 
                 String carro = renavam + ";" + nome + ";" + modelo + ";" + placa + ";" + dataString + ";" + condutor + ";" + cpf;
 
-                veiculos.atualizar(huffTree.Compress(carro), huffTree.Compress(renavam), huffTree);
+                Character[] carro_compressed = huffTree[0].Compress(carro);
+                
+                Character[] renavam_compressed = huffTree[1].Compress(renavam);
+
+                veiculos.atualizar(carro_compressed, renavam_compressed, huffTree);
 
                 break;
             }

@@ -22,7 +22,6 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
     @Override
     public void adicionar(Character[] veiculo, HuffTree huffTree) throws RemoteException {
         String decompess = huffTree.Decompress(veiculo);
-        System.out.println(decompess);
         String[] resposta = decompess.split(";");
         Veiculo novo = new Veiculo(resposta[0], resposta[1], resposta[2], resposta[3], LocalDate.parse(resposta[4]), new Condutor(resposta[5], resposta[6]));
         this.tabela.Adicionar(novo, Integer.parseInt(novo.getRenavam()));
@@ -32,8 +31,9 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
     public ResponseDTO remover(Character[] renavam, HuffTree huffTree) throws RemoteException {
         String res = huffTree.Decompress(renavam);
         this.tabela.Remover(Integer.parseInt(res));
-        Character[] compressed = huffTree.Compress("Removido veículo [ " + res + " ]");
-        return new ResponseDTO(compressed, huffTree);
+        HuffTree novaHuffTree = new HuffTree();
+        Character[] compressed = novaHuffTree.Compress("Removido veículo [ " + res + " ]");
+        return new ResponseDTO(compressed, novaHuffTree);
     }
 
     @Override
@@ -47,11 +47,11 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
         String decompressed = huffTree.Decompress(renavam);
 
-        huffTree.Clear();
+        HuffTree novaHuffTree = new HuffTree();
 
-        Character[] compressed = huffTree.Compress(this.tabela.BuscarMF(Integer.parseInt(decompressed)).getValor().toString());
+        Character[] compressed = novaHuffTree.Compress(this.tabela.BuscarMF(Integer.parseInt(decompressed)).getValor().toString());
 
-        return new ResponseDTO(compressed, huffTree);
+        return new ResponseDTO(compressed, novaHuffTree);
     }
 
     @Override
@@ -59,11 +59,11 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
         String decompressed = huffTree.Decompress(renavam);
 
-        huffTree.Clear();
+        HuffTree novaHuffTree = new HuffTree();
 
-        Character[] compressed = huffTree.Compress(this.tabela.BuscarTR(Integer.parseInt(decompressed)).getValor().toString());
+        Character[] compressed = novaHuffTree.Compress(this.tabela.BuscarTR(Integer.parseInt(decompressed)).getValor().toString());
 
-        return new ResponseDTO(compressed, huffTree);
+        return new ResponseDTO(compressed, novaHuffTree);
 
     }
 
@@ -72,21 +72,22 @@ public class VeiculoService extends UnicastRemoteObject implements IServer {
 
         String decompressed = huffTree.Decompress(renavam);
 
-        huffTree.Clear();
+        HuffTree novaHuffTree = new HuffTree();
 
-        Character[] compressed = huffTree.Compress(this.tabela.BuscarCF(Integer.parseInt(decompressed)).getValor().toString());
+        Character[] compressed = novaHuffTree.Compress(this.tabela.BuscarCF(Integer.parseInt(decompressed)).getValor().toString());
 
-        return new ResponseDTO(compressed, huffTree);
+        return new ResponseDTO(compressed, novaHuffTree);
 
     }
 
     @Override
-    public void atualizar(Character[] novo, Character[] renavam, HuffTree huffTree) throws RemoteException {
-        String decompess = huffTree.Decompress(novo);
+    public void atualizar(Character[] novo, Character[] renavam, HuffTree[] huffTree) throws RemoteException {
+        String decompess = huffTree[0].Decompress(novo);
         String[] resposta = decompess.split(";");
         LocalDate localDate = LocalDate.parse(resposta[4]);
         Veiculo novoVeiculo = new Veiculo(resposta[0], resposta[1], resposta[2], resposta[3], localDate, new Condutor(resposta[5], resposta[6]));
-        Veiculo velhoVeiculo = this.tabela.BuscarMF(Integer.parseInt(huffTree.Decompress(renavam))).getValor();
+        String renavam_decompressed = huffTree[1].Decompress(renavam);
+        Veiculo velhoVeiculo = this.tabela.BuscarMF(Integer.parseInt(renavam_decompressed)).getValor();
         if(attCampos(novoVeiculo, velhoVeiculo)){
             this.tabela.Atualizar(velhoVeiculo, Integer.parseInt(velhoVeiculo.getRenavam()));
         }

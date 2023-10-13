@@ -14,7 +14,7 @@ public interface IServer extends Remote {
     ResponseDTO buscarMF(Character[] renavam, HuffTree huffTree) throws RemoteException;
     ResponseDTO buscarTR(Character[] renavam, HuffTree huffTree) throws RemoteException;
     ResponseDTO buscarCF(Character[] renavam, HuffTree huffTree) throws RemoteException;
-    void atualizar(Character[] novo, Character[] renavam, HuffTree huffTree) throws RemoteException;
+    void atualizar(Character[] novo, Character[] renavam, HuffTree[] huffTree) throws RemoteException;
     ResponseDTO quantidadeDeCarros() throws RemoteException;
     ResponseDTO tamanhoTabela() throws RemoteException;
     ResponseDTO fatorDeCarga() throws RemoteException;
